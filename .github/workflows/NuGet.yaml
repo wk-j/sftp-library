@@ -6,7 +6,7 @@ on:
       - "*"
 
 env:
-  PROJECT: SftpClient
+  PROJECT: SftpLibrary
 
 jobs:
   build:
