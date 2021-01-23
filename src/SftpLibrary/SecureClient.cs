@@ -5,12 +5,6 @@ using Renci.SshNet;
 using System.Linq;
 
 namespace SftpLibrary {
-    public class ClientOptions {
-        public string Host { set; get; }
-        public int Port { set; get; }
-        public string User { set; get; }
-        public string Password { set; get; }
-    }
     public class SecureClient {
         private readonly ClientOptions _options;
         private readonly ILogger<SecureClient> _logger;
@@ -23,11 +17,11 @@ namespace SftpLibrary {
         private void CreateDirectory(SftpClient client, string destination) {
             var paths = destination.TrimEnd('/').Split("/");
 
-            if (paths[0] == string.Empty) {
+            if (paths[0]?.Length == 0) {
                 paths[0] = "/";
             }
 
-            var currentPath = paths.ElementAt(0);
+            var currentPath = paths[0];
 
             if (!client.Exists(currentPath)) {
                 _logger.LogInformation("Create directory {0}", currentPath);
@@ -62,6 +56,7 @@ namespace SftpLibrary {
 
             using var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read);
             client.UploadFile(stream, destination);
+            client.Disconnect();
 
             return (true, "");
         }
